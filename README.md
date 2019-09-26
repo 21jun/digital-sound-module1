@@ -5,11 +5,12 @@
 Windows10 (x64), python 3.6.5 (64bit)
 
 1. 가상환경 만들기
-create venv
+
+- create venv
 ```py
 python -m venv venv
 ```
-run bat
+- run bat
 ```py
 venv\Scripts\activate
 ```
