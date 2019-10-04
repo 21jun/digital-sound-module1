@@ -1,18 +1,45 @@
 import scipy.io.wavfile as wf
 import numpy as np
 from pathlib import Path
-from math import cos, pi
+from math import cos, sin, pi, sqrt
+
 
 def cosine_function(t):
-    left = (cos(float(t) / (16000 * 2) * pi + pi * 2.0 / 3.0) + 1) / 2.0
-    right= (cos(float(t) / (16000 * 2) * pi - pi * 2.0 / 3.0) + 1) / 2.0
-    
-    return left, right
+    lch = (cos(float(t) / (16000 * 2) * pi + pi * 2.0 / 3.0) + 1) / 2.0
+    rch = (cos(float(t) / (16000 * 2) * pi - pi * 2.0 / 3.0) + 1) / 2.0
 
-def EUD_function(t):
-    pass
+    return lch, rch
+
+
+def euclidean(t):
+    r, h = 5, 3
+    x = cos(t / (16000.0 * 2) * pi) * float(r)
+    y = sin(t / (16000.0 * 2) * pi) * float(r)
+    euclidean.max = sqrt(h ** 2 + r ** 2) + r
+    euclidean.min = sqrt(h ** 2 + r ** 2) - r
+
+    lx, ly = -h, -r
+    rx, ry = h, -r
+
+    ldist = np.sqrt((x - lx) ** 2 + (y - ly) ** 2)
+    rdist = np.sqrt((x - rx) ** 2 + (y - ry) ** 2)
+
+    lch = 1 - ldist / euclidean.max
+    rch = 1 - rdist / euclidean.max
+
+    return lch, rch
+
 
 def convert(file_path, function):
+
+    print(
+        "{0:<15} converting: {1:>35} ".format(
+            function.__name__, file_path.stem + ".wav ..."
+        ),
+        end="",
+        flush=True,
+    )
+
     rate, data = wf.read(file_path)
 
     if rate != 16000:
@@ -34,7 +61,8 @@ def convert(file_path, function):
 
     # left, right 순서로 concat
     sum = np.concatenate((left.reshape(-1, 1), right.reshape(-1, 1)), axis=1)
-    wf.write("out/" + file_path.stem + ".wav", rate, sum)
+    wf.write(f"out/{file_path.stem}_{function.__name__}.wav", rate, sum)
+    print("done")
 
 
 if __name__ == "__main__":
@@ -44,6 +72,5 @@ if __name__ == "__main__":
     files = [x for x in path if x.is_file()]
 
     for file in files:
-        print(f"converting : {file.stem}.wav ...", end='')
         convert(file_path=file, function=cosine_function)
-        print(f"[done]")
+        convert(file_path=file, function=euclidean)
