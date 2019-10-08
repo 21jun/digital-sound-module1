@@ -27,6 +27,12 @@ def euclidean(t):
     lch = 1 - ldist / euclidean.max
     rch = 1 - rdist / euclidean.max
 
+    lch = lch * 0.8
+    rch = rch * 0.8
+
+    lch = lch + 0.2
+    rch = rch + 0.2
+
     return lch, rch
 
 
