@@ -11,7 +11,7 @@ Windows10 (x64), python 3.6.5 (64bit)
 python -m venv venv
 ```
 - run bat
-```py
+```
 venv\Scripts\activate
 ```
 
