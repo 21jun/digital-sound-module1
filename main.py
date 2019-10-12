@@ -5,16 +5,15 @@ from math import cos, sin, pi, sqrt
 
 
 def cosine_function(t):
-    lch = (cos(float(t) / (16000 * 2) * pi + pi * 2.0 / 3.0) + 1) / 2.0
-    rch = (cos(float(t) / (16000 * 2) * pi - pi * 2.0 / 3.0) + 1) / 2.0
-
+    lch = (cos(float(t) / (16000 * 2) * pi - (pi ) * 4.0 / 5.0) + 1) / 1.45
+    rch = (cos(float(t) / (16000 * 2) * pi + (pi ) * 4.0 / 5.0) + 1) / 1.45
     return lch, rch
 
 
 def euclidean(t):
     r, h = 5, 3
-    x = cos(t / (16000.0 * 2) * pi) * float(r)
-    y = sin(t / (16000.0 * 2) * pi) * float(r)
+    x = cos(t / (16000.0 * 2) * pi + pi/2.0) * float(r)
+    y = sin(t / (16000.0 * 2) * pi + pi/2.0) * float(r)
     euclidean.max = sqrt(h ** 2 + r ** 2) + r
     euclidean.min = sqrt(h ** 2 + r ** 2) - r
 
