@@ -3,10 +3,15 @@ import numpy as np
 from pathlib import Path
 from math import cos, sin, pi, sqrt
 
+MAX = 0
+
 
 def cosine_function(t):
-    lch = (cos(float(t) / (16000 * 2) * pi - (pi ) * 4.0 / 5.0) + 1) / 1.45
-    rch = (cos(float(t) / (16000 * 2) * pi + (pi ) * 4.0 / 5.0) + 1) / 1.45
+    lch = (cos(float(t) / (16000 * 2) * pi - (pi ) * 4.0 / 5.0) + 1) / 2.0
+    rch = (cos(float(t) / (16000 * 2) * pi + (pi ) * 4.0 / 5.0) + 1) / 2.0
+    global MAX
+    lch *= 32768.0 / MAX
+    rch *= 32768.0 / MAX
     return lch, rch
 
 
@@ -25,12 +30,6 @@ def euclidean(t):
 
     lch = 1 - ldist / euclidean.max
     rch = 1 - rdist / euclidean.max
-
-    lch = lch * 0.8
-    rch = rch * 0.8
-
-    lch = lch + 0.2
-    rch = rch + 0.2
 
     return lch, rch
 
@@ -58,6 +57,10 @@ def convert(file_path, function):
     right = data[:, 1]
     right.setflags(write=1)
     left.setflags(write=1)
+
+    global MAX
+
+    MAX = left.max() if left.max() >= right.max() else right.max()
 
     for t in range(data.shape[0]):
         l, r = function(t)
