@@ -4,14 +4,15 @@ from pathlib import Path
 from math import cos, sin, pi, sqrt
 
 MAX = 0
-
+QMAX = 32000.0
 
 def cosine_function(t):
     lch = (cos(float(t) / (16000 * 2) * pi - (pi ) * 4.0 / 5.0) + 1) / 2.0
     rch = (cos(float(t) / (16000 * 2) * pi + (pi ) * 4.0 / 5.0) + 1) / 2.0
     global MAX
-    lch *= 32768.0 / MAX
-    rch *= 32768.0 / MAX
+    global QMAX
+    lch *= QMAX / MAX
+    rch *= QMAX / MAX
     return lch, rch
 
 
@@ -30,6 +31,11 @@ def euclidean(t):
 
     lch = 1 - ldist / euclidean.max
     rch = 1 - rdist / euclidean.max
+
+    global MAX
+    global QMAX
+    lch *= QMAX / MAX
+    rch *= QMAX / MAX
 
     return lch, rch
 
